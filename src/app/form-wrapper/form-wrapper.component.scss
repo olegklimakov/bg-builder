@@ -1,0 +1,42 @@
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu {
+  display: flex;
+  flex: 2;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  padding: 20px;
+  flex-direction: column;
+}
+
+.wrapper {
+  display: flex;
+}
+
+.colors {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.color-row {
+  display: flex;
+  height: 20px;
+  margin-bottom: 5px;
+  &-selected {
+    border: 1px solid olivedrab;
+  }
+
+  .color-col {
+    display: flex;
+    flex: 1;
+  }
+}

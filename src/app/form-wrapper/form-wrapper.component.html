@@ -1,0 +1,55 @@
+<div class="wrapper">
+  <section class="menu">
+    <form class="form" [formGroup]="form">
+      <mat-slider
+        color="primary"
+        (input)="onSliderChange($event, 'cellSize')"
+        formControlName="cellSize"
+        tickInterval="10"
+        step="5"
+        min="10"
+        max="100"
+      ></mat-slider>
+      <mat-slider
+        (input)="onSliderChange($event, 'variance')"
+        formControlName="variance"
+        tickInterval="2"
+        step="0.05"
+        min="0"
+        max="1"
+      ></mat-slider>
+      <mat-slider
+        color="primary"
+        (input)="onSliderChange($event, 'interpolateLinear')"
+        formControlName="interpolateLinear"
+        tickInterval="2"
+        step="0.05"
+        min="0"
+        max="1"
+      ></mat-slider>
+    </form>
+    <div class="colors">
+      <div
+        *ngFor="let colorArray of colors"
+        class="color-row"
+        [class.color-row-selected]="isSelected(colorArray)"
+        (click)="selectColorRow(colorArray)"
+      >
+        <div
+          *ngFor="let color of colorArray"
+          class="color-col"
+          [style.backgroundColor]="color"
+        ></div>
+      </div>
+    </div>
+  </section>
+  <section class="main">
+    <app-canvas [options]="options$ | async"></app-canvas>
+    <mat-form-field appearance="outline">
+      <input matInput [formControl]="fileName">
+    </mat-form-field>
+    <button (click)="uploadSVG()" mat-raised-button>
+      SVG
+    </button>
+  </section>
+</div>
