@@ -35,6 +35,8 @@ export class FormWrapperComponent implements OnInit {
       variance: [0.75],
       interpolateLinear: [0.1],
       xColors: [this.colors[0]],
+      width: [600],
+      height: [400],
     });
   }
 
