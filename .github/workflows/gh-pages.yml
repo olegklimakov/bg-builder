@@ -1,0 +1,18 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and push to gh-pages branch
+        uses: AhsanAyaz/angular-deploy-gh-pages-actions@v1.3.2
+        with:
+          github_access_token: ${{ secrets.GH_TOKEN }} # see the Configuration section for how you can create secrets
+          base_href: /trianglifier/   # make sure this corresponds to https://<your_username>.github.io/<base_href>/
+          deploy_branch: gh-pages # The branch the action should deploy to.
+          angular_dist_build_folder: dist/trianglifier # The folder where your project is supposed to be after running ng build by the action.
