@@ -2,14 +2,35 @@
   <section class="menu">
     <form class="form" [formGroup]="form">
       <div>
-        <mat-form-field appearance="outline">
+        <mat-form-field class="input" appearance="outline">
           <mat-label>Width</mat-label>
           <input matInput formControlName="width">
+          <mat-error *ngIf="widthControl.hasError('max')">
+            Max number is 3840
+          </mat-error>
+          <mat-error *ngIf="widthControl.hasError('min')">
+            Min number is 50
+          </mat-error>
+          <mat-error *ngIf="widthControl.hasError('required')">
+            Width required
+          </mat-error>
         </mat-form-field>
-        <mat-form-field appearance="outline">
+        <mat-form-field class="input" appearance="outline">
           <mat-label>Height</mat-label>
           <input matInput formControlName="height">
+          <mat-error *ngIf="heightControl.hasError('max')">
+            Max number is 3840
+          </mat-error>
+          <mat-error *ngIf="heightControl.hasError('min')">
+            Min number is 50
+          </mat-error>
+          <mat-error *ngIf="heightControl.hasError('required')">
+            Height required
+          </mat-error>
         </mat-form-field>
+      </div>
+      <div>
+        CELL SIZE
       </div>
       <mat-slider
         color="primary"
@@ -17,9 +38,12 @@
         formControlName="cellSize"
         tickInterval="10"
         step="1"
-        min="10"
+        min="30"
         max="100"
       ></mat-slider>
+      <div>
+        TRIANGLE VARIANCE
+      </div>
       <mat-slider
         (input)="onSliderChange($event, 'variance')"
         formControlName="variance"
@@ -28,6 +52,9 @@
         min="0"
         max="1"
       ></mat-slider>
+      <div>
+        PATTERN INTENSITY
+      </div>
       <mat-slider
         color="primary"
         (input)="onSliderChange($event, 'interpolateLinear')"
@@ -55,12 +82,14 @@
   </section>
   <section class="main">
     <app-canvas [options]="options$ | async"></app-canvas>
-    <mat-form-field appearance="outline">
-      <mat-label>Filename</mat-label>
-      <input matInput [formControl]="fileName">
-    </mat-form-field>
-    <button (click)="uploadSVG()" mat-raised-button>
-      SVG
-    </button>
+    <div class="file-name">
+      <mat-form-field appearance="outline">
+        <mat-label>Filename</mat-label>
+        <input matInput [formControl]="fileName">
+      </mat-form-field>
+      <button (click)="uploadSVG()" mat-raised-button>
+        SVG
+      </button>
+    </div>
   </section>
 </div>

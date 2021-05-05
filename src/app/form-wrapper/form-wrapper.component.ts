@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CanvasComponent, TrianglifyOpts } from './canvas/canvas.component';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { MatSliderChange } from '@angular/material/slider';
 import { COLORS } from './colors.data';
 
@@ -24,9 +24,11 @@ export class FormWrapperComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.makeForm();
-    this.options$ = this.form.valueChanges.pipe(map(data => {
-      return {...data};
-    }));
+    this.options$ = this.form.valueChanges
+      .pipe(
+        filter(() => this.form.valid),
+        map(data => ({...data})),
+      );
   }
 
   makeForm(): FormGroup {
@@ -35,8 +37,8 @@ export class FormWrapperComponent implements OnInit {
       variance: [0.75],
       interpolateLinear: [0.1],
       xColors: [this.colors[0]],
-      width: [600],
-      height: [400],
+      width: [600, [Validators.required, Validators.max(3840), Validators.min(50)]],
+      height: [400, [Validators.required, Validators.max(3840), Validators.min(50)]],
     });
   }
 
@@ -52,7 +54,7 @@ export class FormWrapperComponent implements OnInit {
     return this.form.get('xColors').value === colorArray;
   }
 
-  uploadSVG() {
+  uploadSVG(): void {
     const data = this.canvas.uploadSVG().outerHTML;
     console.log(data);
     const blob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
@@ -60,7 +62,7 @@ export class FormWrapperComponent implements OnInit {
     this.download(url, `${this.fileName.value}.svg`);
   }
 
-  download(href, name) {
+  download(href, name): void {
     const link = document.createElement('a');
     link.download = name;
     link.style.opacity = '0';
@@ -68,5 +70,13 @@ export class FormWrapperComponent implements OnInit {
     link.href = href;
     link.click();
     link.remove();
+  }
+
+  get widthControl() {
+    return this.form.get('width');
+  }
+
+  get heightControl() {
+    return this.form.get('height');
   }
 }

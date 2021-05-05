@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
 import * as trianglify from 'trianglify';
 import * as colorbrewer from 'trianglify/src/utils/colorbrewer';
+import { COLORS } from '../colors.data';
 
 export interface TrianglifyOpts {
   width: number;
@@ -25,7 +26,7 @@ const DEFAULT_OPTS: TrianglifyOpts = {
   cellSize: 35,
   variance: 0.75,
   seed: null,
-  xColors: ['#000000', '#4CAFE8', '#FFFFFF'],
+  xColors: Object.values(COLORS)[0],
   yColors: 'match',
   fill: true,
   palette: colorbrewer,
@@ -37,12 +38,16 @@ const DEFAULT_OPTS: TrianglifyOpts = {
 
 @Component({
   selector: 'app-canvas',
-  template: '',
+  templateUrl: './canvas.component.html',
+  styleUrls: ['./canvas.component.scss']
 })
 export class CanvasComponent implements AfterViewInit {
 
-  private trianglifyOpts = DEFAULT_OPTS;
+  trianglifyOpts = DEFAULT_OPTS;
   @ViewChildren('container') container;
+  @ViewChildren('canvas') canvas: QueryList<ElementRef>;
+
+  private cx: CanvasRenderingContext2D;
 
   pattern;
   @Input() set options(data: Partial<TrianglifyOpts>) {
@@ -59,7 +64,7 @@ export class CanvasComponent implements AfterViewInit {
 
   constructor(
     private renderer: Renderer2,
-    private elementRef: ElementRef
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngAfterViewInit(): void {
@@ -67,11 +72,23 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   private rerender() {
-    if (this.elementRef.nativeElement.firstChild) {
-      this.renderer.removeChild(this.elementRef.nativeElement, this.elementRef.nativeElement?.firstChild);
-    }
+    // const container = this.container?.first?.nativeElement;
+    // if (!container) { return; }
+    // if (container.firstChild) {
+    //   this.renderer.removeChild(container, container.firstChild);
+    // }
+    if (!this.canvas?.first?.nativeElement) { return; }
+    const canvasEl: HTMLCanvasElement = this.canvas?.first?.nativeElement;
+
+    this.cx = canvasEl.getContext('2d');
+    canvasEl.width = this.trianglifyOpts.width;
+    canvasEl.height = this.trianglifyOpts.height;
+
     this.pattern = trianglify(this.trianglifyOpts);
-    this.renderer.appendChild(this.elementRef.nativeElement, this.pattern.toCanvas());
+    const component = this.pattern.toCanvas();
+
+    this.cx.drawImage(component, 0, 0);
+    this.cdr.markForCheck();
   }
 
   uploadSVG() {
