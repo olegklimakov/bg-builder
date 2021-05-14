@@ -6,5 +6,12 @@
   height: auto;
   width: auto;
   max-width: 100%;
-  max-height: 100%;
+  max-height: 40vh;
+}
+
+
+@media screen and (min-width: 800px) {
+  .canvas {
+    max-height: 100%;
+  }
 }

@@ -1,27 +1,35 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
+
+export type SaveFormat =  'png' | 'svg';
+
+export interface DownloadDialogResult {
+  name: string;
+  format: SaveFormat;
+}
 
 @Component({
   selector: 'app-download-modal',
   templateUrl: './download-modal.component.html',
-  styleUrls: ['./download-modal.component.scss']
+  styleUrls: ['./download-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DownloadModalComponent implements OnInit {
+export class DownloadModalComponent {
 
   fileName = new FormControl();
-  format: 'png' | 'svg' = 'png';
+  format: SaveFormat = 'png';
 
   constructor(public dialogRef: MatDialogRef<DownloadModalComponent>) {}
-
-  ngOnInit(): void {
-  }
 
   close() {
     this.dialogRef.close();
   }
 
-  uploadSVG() {}
-
-  uploadPNG() {}
+  download() {
+    this.dialogRef.close({
+      name: this.fileName.value,
+      format: this.format,
+    });
+  }
 }

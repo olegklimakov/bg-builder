@@ -22,7 +22,7 @@ export interface TrianglifyOpts {
 }
 
 const DEFAULT_OPTS: Partial<TrianglifyOpts> = {
-  width: 1440,
+  width: 1200,
   height: 900,
   cellSize: 35,
   variance: 0.75,

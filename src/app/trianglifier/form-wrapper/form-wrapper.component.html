@@ -1,4 +1,15 @@
 <div class="wrapper">
+  <section class="main">
+    <app-canvas [options]="options$ | async"></app-canvas>
+    <button
+      (click)="openModal()"
+      mat-fab
+      color="primary"
+      aria-label="Example icon button with a delete icon"
+    >
+      <mat-icon>download</mat-icon>
+    </button>
+  </section>
   <section class="menu">
     <form class="form" [formGroup]="form">
       <div>
@@ -79,16 +90,5 @@
         ></div>
       </div>
     </div>
-  </section>
-  <section class="main">
-    <app-canvas [options]="options$ | async"></app-canvas>
-    <button
-      (click)="openModal()"
-      mat-fab
-      color="primary"
-      aria-label="Example icon button with a delete icon"
-    >
-      <mat-icon>download</mat-icon>
-    </button>
   </section>
 </div>
