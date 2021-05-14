@@ -1,5 +1,5 @@
 {
-  "name": "trianglifier",
+  "name": "bg-builder",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -22,6 +22,7 @@
     "@angular/material": "^9.2.4",
     "@angular/platform-browser": "~9.1.11",
     "@angular/platform-browser-dynamic": "~9.1.11",
+    "@angular/router": "~9.1.11",
     "rxjs": "~6.5.4",
     "trianglify": "^4.1.1",
     "tslib": "^1.10.0",

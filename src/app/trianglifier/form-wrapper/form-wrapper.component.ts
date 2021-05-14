@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CanvasComponent, TrianglifyOpts } from './canvas/canvas.component';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { debounceTime, filter, map, throttleTime } from 'rxjs/operators';
 import { MatSliderChange } from '@angular/material/slider';
 import { COLORS } from './colors.data';
 
@@ -26,6 +26,7 @@ export class FormWrapperComponent implements OnInit {
     this.form = this.makeForm();
     this.options$ = this.form.valueChanges
       .pipe(
+        throttleTime(100),
         filter(() => this.form.valid),
         map(data => ({...data})),
       );
@@ -37,8 +38,8 @@ export class FormWrapperComponent implements OnInit {
       variance: [0.75],
       interpolateLinear: [0.1],
       xColors: [this.colors[0]],
-      width: [1440, [Validators.required, Validators.max(3840), Validators.min(50)]],
-      height: [900, [Validators.required, Validators.max(3840), Validators.min(50)]],
+      width: [window?.screen?.width || 1440, [Validators.required, Validators.max(3840), Validators.min(50)]],
+      height: [window?.screen?.height || 900, [Validators.required, Validators.max(3840), Validators.min(50)]],
     });
   }
 
