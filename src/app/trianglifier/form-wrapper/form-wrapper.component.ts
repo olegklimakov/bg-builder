@@ -58,22 +58,22 @@ export class FormWrapperComponent implements OnInit {
     return this.form.get('xColors').value === colorArray;
   }
 
-  uploadSVG(fileName: string): void {
+  uploadSVG(fileName: string= 'background'): void {
     const data = this.canvas.uploadSVG().outerHTML;
     const blob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
     const url = window.URL.createObjectURL(blob);
     this.download(url, `${fileName}.svg`);
   }
 
-  uploadPNG(fileName: string): void {
+  uploadPNG(fileName: string = 'background'): void {
     const canvas = this.canvas.getCanvas();
     const url = canvas.toDataURL('image/png');
     this.download(url, `${fileName}.png`);
   }
 
-  uploadJPG(fileName: string): void {
+  uploadJPG(fileName: string = 'background'): void {
     const canvas = this.canvas.getCanvas();
-    const url = canvas.toDataURL('image/jpg');
+    const url = canvas.toDataURL('image/jpeg');
     this.download(url, `${fileName}.jpg`);
   }
 
