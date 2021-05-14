@@ -98,4 +98,9 @@ export class CanvasComponent implements AfterViewInit {
   uploadSVG() {
     return this.pattern.toSVG();
   }
+
+  getCanvas(): HTMLCanvasElement {
+    if (!this.canvas?.first?.nativeElement) { return; }
+    return this.canvas?.first?.nativeElement;
+  }
 }

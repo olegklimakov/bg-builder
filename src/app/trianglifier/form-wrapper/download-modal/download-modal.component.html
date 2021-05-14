@@ -1,0 +1,41 @@
+<h2> Download </h2>
+<div class="row">
+  <button
+    (click)="close()"
+    class="close"
+    mat-mini-fab
+    color="warn"
+    aria-label="Example icon button with a plus one icon"
+  >
+    <mat-icon>close</mat-icon>
+  </button>
+  <div class="col">
+    <mat-form-field appearance="outline">
+      <mat-label>Filename</mat-label>
+      <input matInput [formControl]="fileName">
+    </mat-form-field>
+    <mat-button-toggle-group [(value)]="format">
+      <mat-button-toggle value="png" aria-label="Text align left">
+        .PNG
+      </mat-button-toggle>
+      <mat-button-toggle value="svg" aria-label="Text align center">
+        .SVG
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    <button
+      color="primary"
+      class="button"
+      mat-raised-button
+      (click)="uploadSVG()"
+    >
+      Download
+    </button>
+  </div>
+  <div class="col right">
+
+    <h2>Do you like this tool?</h2>
+    <span class="text">You can support me with this services:</span>
+    <app-donations class="donations"></app-donations>
+    <span> donations will allow us to avoid ads and develop a website </span>
+  </div>
+</div>

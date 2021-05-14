@@ -2,9 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CanvasComponent, TrianglifyOpts } from './canvas/canvas.component';
 import { Observable } from 'rxjs';
-import { debounceTime, filter, map, throttleTime } from 'rxjs/operators';
+import { filter, map, take, throttleTime } from 'rxjs/operators';
 import { MatSliderChange } from '@angular/material/slider';
 import { COLORS } from './colors.data';
+import { MatDialog } from '@angular/material/dialog';
+import { DownloadModalComponent } from './download-modal/download-modal.component';
 
 @Component({
   selector: 'app-form-wrapper',
@@ -20,9 +22,13 @@ export class FormWrapperComponent implements OnInit {
   options$: Observable<TrianglifyOpts>;
   colors = Object.values(COLORS);
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
+    this.openModal();
     this.form = this.makeForm();
     this.options$ = this.form.valueChanges
       .pipe(
@@ -57,10 +63,15 @@ export class FormWrapperComponent implements OnInit {
 
   uploadSVG(): void {
     const data = this.canvas.uploadSVG().outerHTML;
-    console.log(data);
     const blob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
     const url = window.URL.createObjectURL(blob);
     this.download(url, `${this.fileName.value}.svg`);
+  }
+
+  uploadPNG(): void {
+    const canvas = this.canvas.getCanvas();
+    const url = canvas.toDataURL('image/png');
+    this.download(url, `${this.fileName.value}.png`);
   }
 
   download(href, name): void {
@@ -79,5 +90,13 @@ export class FormWrapperComponent implements OnInit {
 
   get heightControl() {
     return this.form.get('height');
+  }
+
+  openModal() {
+    this.dialog.open(DownloadModalComponent, {}).afterClosed()
+      .pipe(take(1))
+      .subscribe(data => {
+        console.log(data);
+      });
   }
 }

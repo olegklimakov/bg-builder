@@ -82,14 +82,13 @@
   </section>
   <section class="main">
     <app-canvas [options]="options$ | async"></app-canvas>
-    <div class="file-name">
-      <mat-form-field appearance="outline">
-        <mat-label>Filename</mat-label>
-        <input matInput [formControl]="fileName">
-      </mat-form-field>
-      <button (click)="uploadSVG()" mat-raised-button>
-        SVG
-      </button>
-    </div>
+    <button
+      (click)="openModal()"
+      mat-fab
+      color="primary"
+      aria-label="Example icon button with a delete icon"
+    >
+      <mat-icon>download</mat-icon>
+    </button>
   </section>
 </div>

@@ -1,0 +1,44 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.col {
+  min-width: 250px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-right: 1rem;
+  margin-bottom: 15px;
+}
+
+.mat-button-toggle {
+  width: 100%;
+}
+
+.col:last-child {
+  margin-right: 0;
+}
+
+.right {
+  align-items: center;
+}
+
+.button {
+  margin-top: 1rem;
+}
+
+.close {
+  position: absolute;
+  right: 0;
+  top: -55px;
+}
+
+.donations {
+  max-width: 350px;
+}
+
+.text {
+  margin-bottom: 5px;
+}

@@ -8,6 +8,11 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule, Routes } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { DownloadModalComponent } from './form-wrapper/download-modal/download-modal.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SharedModule } from '../shared/shared.module';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 const ROUTES: Routes = [
   {
@@ -20,6 +25,7 @@ const ROUTES: Routes = [
   declarations: [
     CanvasComponent,
     FormWrapperComponent,
+    DownloadModalComponent
   ],
   imports: [
     CommonModule,
@@ -28,7 +34,14 @@ const ROUTES: Routes = [
     MatSliderModule,
     MatButtonModule,
     RouterModule.forChild(ROUTES),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule,
+    MatDialogModule,
+    SharedModule,
+    MatButtonToggleModule,
+  ],
+  entryComponents: [
+    DownloadModalComponent
   ]
 })
 export class TrianglifierModule { }
