@@ -71,6 +71,12 @@ export class FormWrapperComponent implements OnInit {
     this.download(url, `${fileName}.png`);
   }
 
+  uploadJPG(fileName: string): void {
+    const canvas = this.canvas.getCanvas();
+    const url = canvas.toDataURL('image/jpg');
+    this.download(url, `${fileName}.jpg`);
+  }
+
   download(href, name): void {
     const link = document.createElement('a');
     link.download = name;
@@ -95,6 +101,9 @@ export class FormWrapperComponent implements OnInit {
       .subscribe((data: DownloadDialogResult) => {
         if (!data) { return; }
         switch (data.format) {
+          case 'jpg':
+            this.uploadJPG(data.name);
+            break;
           case 'png':
             this.uploadPNG(data.name);
             break;

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 
-export type SaveFormat =  'png' | 'svg';
+export type SaveFormat =  'png' | 'svg' | 'jpg';
 
 export interface DownloadDialogResult {
   name: string;
@@ -18,7 +18,7 @@ export interface DownloadDialogResult {
 export class DownloadModalComponent {
 
   fileName = new FormControl();
-  format: SaveFormat = 'png';
+  format: SaveFormat = 'jpg';
 
   constructor(public dialogRef: MatDialogRef<DownloadModalComponent>) {}
 
