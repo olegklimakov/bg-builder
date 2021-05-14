@@ -1,8 +1,8 @@
-import { AfterViewChecked, AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CanvasComponent, TrianglifyOpts } from './canvas/canvas.component';
-import { Observable } from 'rxjs';
-import { filter, map, take, throttleTime } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { filter, map, pairwise, take, throttleTime } from 'rxjs/operators';
 import { MatSliderChange } from '@angular/material/slider';
 import { COLORS } from './colors.data';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,21 +13,49 @@ import { DownloadDialogResult, DownloadModalComponent } from './download-modal/d
   templateUrl: './form-wrapper.component.html',
   styleUrls: ['./form-wrapper.component.scss']
 })
-export class FormWrapperComponent implements OnInit, AfterViewInit {
+export class FormWrapperComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(CanvasComponent) canvas: CanvasComponent;
 
   form: FormGroup;
   options$: Observable<TrianglifyOpts>;
   colors = Object.values(COLORS);
+  ignoreScrolling = false;
+  subs: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
   ) {}
 
+  ignoreClickOnSlider(controlName: string) {
+    const sub = this.form.get(controlName).valueChanges
+      .pipe(
+        pairwise()
+      )
+      .subscribe(([prev, current]) => {
+        const diff = Math.abs(prev - current);
+        if (diff > 0.02 && !this.ignoreScrolling) {
+          this.ignoreScrolling = true;
+          this.form.get(controlName).patchValue(prev);
+        } else {
+          this.ignoreScrolling = false;
+        }
+      });
+    this.subs.push(sub);
+  }
+
+  ngOnDestroy() {
+    this.subs.forEach(sub => sub.unsubscribe());
+  }
+
   ngOnInit(): void {
     this.form = this.makeForm();
+
+    this.ignoreClickOnSlider('cellSizeFractional');
+    this.ignoreClickOnSlider('interpolateLinear');
+    this.ignoreClickOnSlider('variance');
+
     this.options$ = this.form.valueChanges
       .pipe(
         throttleTime(100),

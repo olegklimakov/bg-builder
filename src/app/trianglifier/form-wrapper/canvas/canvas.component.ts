@@ -64,7 +64,6 @@ export class CanvasComponent implements AfterViewInit {
       this.trianglifyOpts.cellSize = Math.max(data.width, data.height) * data?.cellSizeFractional;
       delete this.trianglifyOpts.cellSizeFractional;
     }
-    console.log(this.trianglifyOpts);
     this.rerender();
   }
 
