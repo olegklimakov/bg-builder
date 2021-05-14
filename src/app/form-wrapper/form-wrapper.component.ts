@@ -33,12 +33,12 @@ export class FormWrapperComponent implements OnInit {
 
   makeForm(): FormGroup {
     return this.fb.group({
-      cellSize: [35],
+      cellSizeFractional: [0.1],
       variance: [0.75],
       interpolateLinear: [0.1],
       xColors: [this.colors[0]],
-      width: [600, [Validators.required, Validators.max(3840), Validators.min(50)]],
-      height: [400, [Validators.required, Validators.max(3840), Validators.min(50)]],
+      width: [1440, [Validators.required, Validators.max(3840), Validators.min(50)]],
+      height: [900, [Validators.required, Validators.max(3840), Validators.min(50)]],
     });
   }
 

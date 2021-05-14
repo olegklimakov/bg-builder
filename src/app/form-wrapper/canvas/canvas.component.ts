@@ -8,32 +8,33 @@ export interface TrianglifyOpts {
   height: number;
   cellSize: number;
   variance: number;
-  seed: null | number;
+  seed: null | string;
   xColors: string[];
   yColors: 'match' | string[];
-  fill: boolean;
-  palette: colorbrewer;
-  colorSpace: 'lab' | 'rgb' | 'hsv' | 'hsl' | 'hsi' | 'hcl';
+  fill?: boolean;
+  palette?: colorbrewer;
+  colorSpace?: 'lab' | 'rgb' | 'hsv' | 'hsl' | 'hsi' | 'hcl';
   colorFunction: () => void;
   strokeWidth: number;
   points: null;
   interpolateLinear?: number;
+  cellSizeFractional?: number;
 }
 
-const DEFAULT_OPTS: TrianglifyOpts = {
-  width: 600,
-  height: 400,
+const DEFAULT_OPTS: Partial<TrianglifyOpts> = {
+  width: 1440,
+  height: 900,
   cellSize: 35,
   variance: 0.75,
-  seed: null,
+  seed: 'test',
   xColors: Object.values(COLORS)[0],
-  yColors: 'match',
-  fill: true,
-  palette: colorbrewer,
-  colorSpace: 'hcl',
+  // yColors: 'match',
+  // fill: true,
+  // palette: colorbrewer,
+  // colorSpace: 'hcl',
   colorFunction: trianglify.colorFunctions.interpolateLinear(0.1),
-  strokeWidth: 0,
-  points: null,
+  // strokeWidth: 0,
+  // points: null,
 };
 
 @Component({
@@ -59,6 +60,11 @@ export class CanvasComponent implements AfterViewInit {
       this.trianglifyOpts.colorFunction = trianglify.colorFunctions.interpolateLinear(data.interpolateLinear);
       delete this.trianglifyOpts.interpolateLinear;
     }
+    if (data?.cellSizeFractional) {
+      this.trianglifyOpts.cellSize = Math.max(data.width, data.height) * data?.cellSizeFractional;
+      delete this.trianglifyOpts.cellSizeFractional;
+    }
+    console.log(this.trianglifyOpts);
     this.rerender();
   }
 
@@ -72,11 +78,6 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   private rerender() {
-    // const container = this.container?.first?.nativeElement;
-    // if (!container) { return; }
-    // if (container.firstChild) {
-    //   this.renderer.removeChild(container, container.firstChild);
-    // }
     if (!this.canvas?.first?.nativeElement) { return; }
     const canvasEl: HTMLCanvasElement = this.canvas?.first?.nativeElement;
 
@@ -85,7 +86,10 @@ export class CanvasComponent implements AfterViewInit {
     canvasEl.height = this.trianglifyOpts.height;
 
     this.pattern = trianglify(this.trianglifyOpts);
-    const component = this.pattern.toCanvas();
+    const component = this.pattern.toCanvas(canvasEl, {
+      applyCssScaling: false,
+      scaling: false,
+    });
 
     this.cx.drawImage(component, 0, 0);
     this.cdr.markForCheck();
