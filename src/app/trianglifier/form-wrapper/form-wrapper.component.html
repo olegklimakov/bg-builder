@@ -43,38 +43,33 @@
       <div>
         CELL SIZE
       </div>
-      <mat-slider
-        color="primary"
+      <input
         formControlName="cellSizeFractional"
-        tickInterval="10"
         step="0.01"
         min="0.02"
         max="0.25"
-        (input)="onSliderChange($event, 'cellSizeFractional')"
-      ></mat-slider>
+        type="range"
+      >
       <div>
         TRIANGLE VARIANCE
       </div>
-      <mat-slider
-        (input)="onSliderChange($event, 'variance')"
+      <input
         formControlName="variance"
-        tickInterval="2"
         step="0.01"
         min="0"
         max="1"
-      ></mat-slider>
+        type="range"
+      >
       <div>
         PATTERN INTENSITY
       </div>
-      <mat-slider
-        color="primary"
-        (input)="onSliderChange($event, 'interpolateLinear')"
+      <input
         formControlName="interpolateLinear"
-        tickInterval="2"
         step="0.01"
         min="0"
         max="1"
-      ></mat-slider>
+        type="range"
+      >
     </form>
     <div class="colors">
       <div

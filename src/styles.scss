@@ -2,3 +2,19 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+input[type=range] {
+  pointer-events: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  pointer-events: auto;
+}
+
+input[type=range]::-moz-range-thumb {
+  pointer-events: auto;
+}
+
+input[type=range]::-ms-thumb {
+  pointer-events: auto;
+}

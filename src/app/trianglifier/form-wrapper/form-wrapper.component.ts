@@ -1,8 +1,8 @@
-import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CanvasComponent, TrianglifyOpts } from './canvas/canvas.component';
-import { Observable, Subscription } from 'rxjs';
-import { filter, map, pairwise, take, throttleTime } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, map, take, throttleTime } from 'rxjs/operators';
 import { MatSliderChange } from '@angular/material/slider';
 import { COLORS } from './colors.data';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,48 +13,21 @@ import { DownloadDialogResult, DownloadModalComponent } from './download-modal/d
   templateUrl: './form-wrapper.component.html',
   styleUrls: ['./form-wrapper.component.scss']
 })
-export class FormWrapperComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FormWrapperComponent implements OnInit {
 
   @ViewChild(CanvasComponent) canvas: CanvasComponent;
 
   form: FormGroup;
   options$: Observable<TrianglifyOpts>;
   colors = Object.values(COLORS);
-  ignoreScrolling = false;
-  subs: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
   ) {}
 
-  ignoreClickOnSlider(controlName: string) {
-    const sub = this.form.get(controlName).valueChanges
-      .pipe(
-        pairwise()
-      )
-      .subscribe(([prev, current]) => {
-        const diff = Math.abs(prev - current);
-        if (diff > 0.02 && !this.ignoreScrolling) {
-          this.ignoreScrolling = true;
-          this.form.get(controlName).patchValue(prev);
-        } else {
-          this.ignoreScrolling = false;
-        }
-      });
-    this.subs.push(sub);
-  }
-
-  ngOnDestroy() {
-    this.subs.forEach(sub => sub.unsubscribe());
-  }
-
   ngOnInit(): void {
     this.form = this.makeForm();
-
-    this.ignoreClickOnSlider('cellSizeFractional');
-    this.ignoreClickOnSlider('interpolateLinear');
-    this.ignoreClickOnSlider('variance');
 
     this.options$ = this.form.valueChanges
       .pipe(
@@ -66,11 +39,6 @@ export class FormWrapperComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => this.form.patchValue(this.form.value), 0);
   }
 
-  ngAfterViewInit() {
-    window.scrollTo( 0, 0 );
-  }
-
-
   makeForm(): FormGroup {
     return this.fb.group({
       cellSizeFractional: [0.1],
@@ -80,10 +48,6 @@ export class FormWrapperComponent implements OnInit, AfterViewInit, OnDestroy {
       width: [window?.screen?.width || 1440, [Validators.required, Validators.max(3840), Validators.min(50)]],
       height: [window?.screen?.height || 900, [Validators.required, Validators.max(3840), Validators.min(50)]],
     });
-  }
-
-  onSliderChange(change: MatSliderChange, control: string): void {
-    this.form.get(control).patchValue(change.value);
   }
 
   selectColorRow(row: string[]): void {
